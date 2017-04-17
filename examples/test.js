@@ -1,69 +1,77 @@
-var modem = require('../index.js').Modem();
+var exec = require('child_process').exec;
 
-var Session = require('../index.js').Ussd_Session;
+function writeDongleDetails(callback){
+  getModemComPorts(function(ports){
+    var device = null;
+    if(ports[1]) device = ports[1];
+    else if(ports[0]) device = ports[0];
 
-var device1   = '/dev/ttyUSB1';
-var dngl = require('../index.js').Dongle;
+    if(device){
+      exec('sudo nmcli radio wwan off',{uid:0,gid:0}, function(error, stdout, stderr){
+        if(!error){
+          getDongleLocationCode(device,function(error,data){
+            var obj = {};
+            if(data)
+               obj = data;
 
+            getSimBalance(function(err,output){
+              if(!err)
+                obj.simBalance = output;
+              console.log(obj);
+              if(obj)
+                fs.writeJsonSync('./dongleDetails.json', obj);  
+              callback();
 
-var device = new dngl(device1,modem,5000); // put your device here
+            });
 
-device.on("data", function(data){
-  console.log(data);
-});
+          });
+        
+        }else{
+          callback(new Error("wwan off failed"));
+        }
 
-device.on("error", function(err){
-  console.error("error:", err);
-});
+      });
 
-device.on("close", function(){
-  console.log("device is gone.");
-});
+    }else{
+      callback(new Error("no dongle ports found"));
+    }
 
-
-/*
-modem.open(device, function(data){
-	console.log(data);
-	console.log('here');
-	CheckBalance();
-	//sendSMS();
-});
-*/
-var CheckBalance = function() {
-    var session = new Session();
-    session.modem = modem;
-    session.query('*121*#', function(response_code, message){
-    	console.log('inside');
-    	console.log(response_code);
-    	console.log(message);
-    });
-    
-};
-
-
-function sendSMS(){
-	function err(message) {
-  console.log('Usage: node send_sms.js /path/to/device xxxxyyzz "Foo Bar"');
-  process.exit();
-}
-
-
-var receiver = '8888087807';
-var text     = 'Hello';
-
-if(!device || !receiver || !text) err();
-
-	console.log('asdasd');
-  modem.sms({
-    receiver:receiver,
-    text:text,
-    encoding:'16bit'
-  }, function(err, sent_ids) {
-    console.log('>>', arguments);
-    if(err)
-      console.log('Error sending sms:', err);
-    else
-      console.log('Message sent successfully, here are reference ids:', sent_ids.join(','));
   });
+}
+
+function getDongleLocationCode(device,callback){
+    var newModem = require('../index.js').Modem();
+    var Dngl = require('../index.js').Dongle;
+
+    var dongle = new Dngl(device,newModem);
+
+    dongle.on("data", function(data){
+      data.time = new Date();
+      console.log("Dongle Balance And Location Details obtained are : ");
+      console.log(data);
+      //newModem.port.close();
+      callback(null,data);
+    });
 
 }
+
+function getSimBalance(callback){
+  exec('gammu-detect > /root/.gammurc',{uid:0,gid:0}, function(error, stdout, stderr){
+    console.log(error);
+    exec('sudo gammu 1 getussd *125#', function(error, stdout, stderr){
+      console.log('*121*44# ussd returned');
+      console.log(stdout);
+      callback(error,stdout);
+    });
+  });
+}
+
+function getModemComPorts(callback){
+  exec('ls /dev/ttyUSB*',{uid:0,gid:0}, function(error, stdout, stderr){
+    if(!error){
+      callback(stdout.split('\n'));
+    }
+  });
+}
+
+writeDongleDetails(function(){});
