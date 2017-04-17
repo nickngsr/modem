@@ -1,7 +1,7 @@
 var Session = require('../index.js').Ussd_Session;
 var modem = require('../index.js').Modem();
 
-modem.open('/dev/ttyUSB1', function() {
+modem.open('/dev/ttyUSB0', function() {
     var encoded = "*121#";
 
                 var session = new Session;

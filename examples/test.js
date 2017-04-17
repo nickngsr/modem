@@ -14,15 +14,6 @@ function writeDongleDetails(callback){
             if(data)
                obj = data;
 
-            getSimBalance(function(err,output){
-              if(!err)
-                obj.simBalance = output;
-              console.log(obj);
-              if(obj)
-                fs.writeJsonSync('./dongleDetails.json', obj);  
-              callback();
-
-            });
 
           });
         
@@ -43,7 +34,7 @@ function getDongleLocationCode(device,callback){
     var newModem = require('../index.js').Modem();
     var Dngl = require('../index.js').Dongle;
 
-    var dongle = new Dngl(device,newModem);
+    var dongle = new Dngl(newModem);
 
     dongle.on("data", function(data){
       data.time = new Date();
