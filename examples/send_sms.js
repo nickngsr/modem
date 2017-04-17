@@ -15,8 +15,7 @@ var modem = require('../index.js').Modem();
 modem.open('/dev/ttyUSB0', function() {
   modem.sms({
     receiver:receiver,
-    text:text,
-    encoding:'7bit'
+    text:text
   }, function(err, sent_ids) {
     console.log('>>', arguments);
     if(err)
