@@ -31,7 +31,7 @@ function writeDongleDetails(callback,switchDevice){
 
                   if(obj)
                     console.log(obj); 
-
+                  newModem.close();
                   callback();
 
                 });
@@ -45,10 +45,13 @@ function writeDongleDetails(callback,switchDevice){
           });
 
         newModem.on('close',function(error){
-          if(switchDevice)
-            callback(error);
-          else
-            writeDongleDetails(callback,true);
+          if(error){
+            if(switchDevice)
+              callback(error);
+            else
+              writeDongleDetails(callback,true);
+          }
+
         });
 
       },5000);
