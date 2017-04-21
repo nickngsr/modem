@@ -91,6 +91,7 @@ function getSimBalance(newModem,device, callback){
     session.modem = newModem;
     var ussd = "*125#";
     session.query(ussd, function(response_code, message){
+        console.log('cb');
         callback(null,message);
     });
 
