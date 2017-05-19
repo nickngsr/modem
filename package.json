@@ -20,8 +20,9 @@
     "type": "git",
     "url": "https://github.com/emilsedgh/modem.git"
   },
-  "dependencies" : {
-    "serialport" : "latest",
-    "pdu" : "latest"
+  "dependencies": {
+    "moment": "^2.18.1",
+    "pdu": "latest",
+    "serialport": "latest"
   }
 }

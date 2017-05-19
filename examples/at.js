@@ -1,7 +1,13 @@
 var pdu = require('pdu');
 var modem = require('../index.js').Modem();
-modem.open('/dev/ttyUSB1', function() {
+modem.open('/dev/ttyUSB0', function() {
 var encoded = "*121#";
+
+modem.unlockPin('4321',function(locked,err){
+	console.log(locked,err);
+});
+
+
 /*
 	modem.execute('AT+CPIN?', function(escape_char, response){
 		//console.log(escape_char + response);
@@ -34,7 +40,9 @@ var encoded = "*121#";
 			});
 		},9000);
 	});
-*/
+
+
+
 
 
 								modem.execute('ATZ +CFUN=1', function(escape_char, response){
@@ -53,6 +61,6 @@ var encoded = "*121#";
 									},9000);
 								});
 
-
+*/
 
 });
