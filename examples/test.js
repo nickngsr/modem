@@ -54,7 +54,7 @@ function writeDongleDetails(callback,switchDevice){
 
         });
 
-      },5000);
+      },0);
 
     });
 
