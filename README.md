@@ -1,4 +1,6 @@
-Modem.js, GSM Modems on Node
+# Modem.js, GSM Modems on Node
+# Modified to support [Dlink 157](http://www.dlink.com/rs/sr/products/dwm-157-3g-hspa-plus-usb-adapter)
+# Added SIM PIN functions
 ============================
 > Modem.js allows you to use your GSM modems on node.
 It offers a very simple API.
@@ -176,3 +178,29 @@ var CheckBalance = function(c) {
     return session;
 }
 ```
+Sim PIN 
+--------------------------------
+```
+modem.unlockPin(pin,callback)
+```
+> This function will try to unlock sim pin
+* callback `Function` will return `(isLocked,error)`
+* pin `String`
+
+Sim Pin Check 
+--------------------------------
+```
+modem.checkPinLocked(callback)
+```
+> This function will check sim pin status
+* callback `Function` will return `(isLocked,error)`
+
+Sim PUK 
+--------------------------------
+```
+modem.unlockPuk(pin,puk,callback)
+```
+> This function will try to unlock sim puk locked
+* callback `Function` will return `(response,error)`
+* puk `String`
+* pin `String`
