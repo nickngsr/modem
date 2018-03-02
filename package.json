@@ -22,7 +22,6 @@
   },
   "dependencies": {
     "async": "^2.4.1",
-    "moment": "^2.18.1",
     "pdu": "latest",
     "serialport": "latest"
   }
